@@ -1,5 +1,7 @@
 .front-notice {
-    padding: 5px 20px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 20px;
     color: #666;
     font-size: 12px
 }
@@ -7,11 +9,10 @@
     display: flex;
     height: 60px;
     line-height: 60px;
-    border-bottom: 1px solid #eee;
-    background: white;
+    background: #033fbb;
 }
 .front-header-left {
-    width: 350px;
+    width: 450px;
     display: flex;
     align-items: center;
     padding-left: 30px;
@@ -19,11 +20,11 @@
 .front-header-left img, .front-header-dropdown img {
     width: 40px;
     height: 40px;
-    border-radius: 50%
+    /*border-radius: 50%*/
 }
 .front-header-left .title {
     flex: 1;
-    color: #355476;
+    color: #fff;
     cursor: pointer;
     margin-left: 10px;
     font-size: 20px;
@@ -31,9 +32,11 @@
 }
 .front-header-center {
     flex: 1;
+    display: flex;
+     align-items: center;
 }
 .front-header-right {
-    width: 200px;
+    width: 180px;
     padding-right: 20px;
     text-align: right;
 }
@@ -43,7 +46,7 @@
     justify-content: right;
 }
 .el-dropdown-menu {
-    width: 100px !important;
+    width: 110px !important;
     text-align: center !important;
 }
 
@@ -52,6 +55,10 @@
     width: 100%;
     margin: 5px auto;
 }
+.main-body {
+    min-height: calc(100vh - 170px);
+}
+
 /* ElementUI 样式覆盖 */
 .el-menu.el-menu--horizontal {
     border: none !important;
