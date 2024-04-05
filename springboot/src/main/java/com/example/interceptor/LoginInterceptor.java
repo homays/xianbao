@@ -12,6 +12,7 @@ import com.example.entity.Account;
 import com.example.entity.Admin;
 import com.example.exception.CustomException;
 import com.example.mapper.AdminMapper;
+import com.example.mapper.UserMapper;
 import com.example.service.AdminService;
 import com.example.utils.JwtUtil;
 import com.example.utils.ThreadLocalUtil;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
+import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -33,6 +35,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Resource
     private AdminMapper adminMapper;
+    @Resource
+    private UserMapper userMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -55,6 +59,8 @@ public class LoginInterceptor implements HandlerInterceptor {
             String userId = claims.get("userId").toString();
             if (RoleEnum.ADMIN.name().equals(role)) {
                 account = adminMapper.selectById(Integer.valueOf(userId));
+            } else if (RoleEnum.USER.name().equals(role)) {
+                account = userMapper.selectById(Integer.valueOf(userId));
             }
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.TOKEN_CHECK_ERROR);

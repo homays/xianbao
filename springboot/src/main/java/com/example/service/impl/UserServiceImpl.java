@@ -7,14 +7,21 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.Result;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
+import com.example.entity.Account;
+import com.example.entity.Admin;
 import com.example.entity.User;
 import com.example.exception.CustomException;
 import com.example.mapper.UserMapper;
 import com.example.service.UserService;
+import com.example.utils.JwtUtil;
+import com.example.vo.req.RegisterDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.common.Constants.USER_DEFAULT_PASSWORD;
 
@@ -92,6 +99,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Page<User> userPage = userMapper.selectPage(page, wrapper);
         return Result.success(userPage);
+    }
+
+    @Override
+    public Result login(Account account) {
+        User dbUser = userMapper.selectByUsername(account.getUsername());
+        if (ObjectUtil.isNull(dbUser)) {
+            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        }
+        if (!account.getPassword().equals(dbUser.getPassword())) {
+            throw new CustomException(ResultCodeEnum.USER_ACCOUNT_ERROR);
+        }
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", dbUser.getId());
+        claims.put("role", RoleEnum.USER.name());
+        String token = JwtUtil.genToken(claims);
+
+        dbUser.setToken(token);
+        return Result.success(dbUser);
+    }
+
+    @Override
+    public void register(RegisterDTO registerDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(registerDTO, user);
+        add(user);
     }
 }
 
