@@ -1,10 +1,14 @@
 package com.example.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.common.enums.ResultCodeEnum;
 import com.example.entity.Category;
 import com.example.entity.User;
+import com.example.exception.CustomException;
 import com.example.service.CategoryService;
 import com.example.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public void add(Category category) {
+        Category dbCategory = getOne(Wrappers.<Category>lambdaQuery()
+                .eq(Category::getName, category.getName()));
+        if (ObjectUtil.isNotNull(dbCategory)) {
+            throw new CustomException(ResultCodeEnum.CATEGORY_EXIST_ERROR);
+        }
         categoryMapper.insert(category);
     }
 
