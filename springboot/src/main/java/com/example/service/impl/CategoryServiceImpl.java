@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -34,11 +35,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public void deleteById(Integer id) {
+        if (CollUtil.isNotEmpty(this.list())) {
+            throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+        }
         categoryMapper.deleteById(id);
     }
 
     @Override
     public void deleteBatch(List<Integer> ids) {
+        if (CollUtil.isNotEmpty(this.list())) {
+            throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+        }
         categoryMapper.deleteBatchIds(ids);
     }
 
