@@ -43,6 +43,7 @@
               <i class="el-icon-menu"></i><span>信息管理</span>
             </template>
             <el-menu-item index="/notice">公告信息</el-menu-item>
+            <el-menu-item index="/category">分类信息</el-menu-item>
           </el-submenu>
 
           <el-submenu index="user">
