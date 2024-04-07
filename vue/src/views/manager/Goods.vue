@@ -24,7 +24,10 @@
         <el-table-column prop="address" label="发货地址"></el-table-column>
         <el-table-column prop="img" label="图片">
           <template v-slot="scope">
-            <el-image v-if="scope.row.img" style="width: 50px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
+            <div style="display: flex; align-items: center">
+              <el-image style="width: 40px; height: 40px;" v-if="scope.row.img"
+                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="上架日期"></el-table-column>
@@ -81,7 +84,8 @@
           <el-input v-model="form.address" placeholder="发货地址"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="img">
-          <el-input v-model="form.img" placeholder="图片"></el-input>
+          <el-input v-model="form.img" placeholder="图片">
+          </el-input>
         </el-form-item>
         <el-form-item label="上架日期" prop="date">
           <el-input v-model="form.date" placeholder="上架日期"></el-input>
