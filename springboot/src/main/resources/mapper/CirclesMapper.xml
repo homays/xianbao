@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CirclesMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.entity.Circles">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="img" column="img" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id,img,name
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Circles">
+        select
+        <include refid="Base_Column_List" />
+        from circles
+        <where>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Circles">
+        select
+        <include refid="Base_Column_List" />
+        from circles
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from circles
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Circles" useGeneratedKeys="true" keyProperty="id">
+        insert into circles
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="img != null">img,</if>
+            <if test="name != null">name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="img != null">#{img},</if>
+            <if test="name != null">#{name},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Circles">
+        update circles
+        <set>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
