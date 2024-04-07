@@ -8,8 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.entity.Category;
+import com.example.entity.Goods;
 import com.example.entity.User;
 import com.example.exception.CustomException;
+import com.example.mapper.GoodsMapper;
 import com.example.service.CategoryService;
 import com.example.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Resource
     private CategoryMapper categoryMapper;
+    @Resource
+    private GoodsMapper goodsMapper;
 
     @Override
     public void add(Category category) {
@@ -35,16 +39,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public void deleteById(Integer id) {
-        if (CollUtil.isNotEmpty(this.list())) {
-            throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+        Category category = selectById(id);
+        List<Goods> goods = goodsMapper.selectList(null);
+        for (Goods g : goods) {
+            if (g.getCategory().equals(category.getName())) {
+                throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+            }
         }
         categoryMapper.deleteById(id);
     }
 
     @Override
     public void deleteBatch(List<Integer> ids) {
-        if (CollUtil.isNotEmpty(this.list())) {
-            throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+        List<Goods> goods = goodsMapper.selectList(null);
+        for (Goods g : goods) {
+            for (Integer id : ids) {
+                Category category = selectById(id);
+                if (g.getCategory().equals(category.getName())) {
+                    throw new CustomException(ResultCodeEnum.CATEGORY_NOT_DELETE_ERROR);
+                }
+            }
         }
         categoryMapper.deleteBatchIds(ids);
     }

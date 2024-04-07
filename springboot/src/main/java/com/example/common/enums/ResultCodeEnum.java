@@ -16,6 +16,8 @@ public enum ResultCodeEnum {
     PARAM_PASSWORD_ERROR("5005", "原密码输入错误"),
     CATEGORY_EXIST_ERROR("5006", "该分类已存在"),
     CATEGORY_NOT_DELETE_ERROR("5007", "该分类下有商品数据，禁止删除"),
+    CIRCLES_EXIST_ERROR("5008", "该圈子已存在"),
+    CIRCLES_NOT_DELETE_ERROR("5009", "该圈子下有帖子数据，禁止删除"),
     ;
 
     public String code;
