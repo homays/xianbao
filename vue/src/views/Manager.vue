@@ -47,6 +47,7 @@
             <el-menu-item index="/goods">商品信息</el-menu-item>
             <el-menu-item index="/circles">圈子信息</el-menu-item>
             <el-menu-item index="/Posts">帖子信息</el-menu-item>
+            <el-menu-item index="/Help">求助信息</el-menu-item>
           </el-submenu>
 
           <el-submenu index="user">

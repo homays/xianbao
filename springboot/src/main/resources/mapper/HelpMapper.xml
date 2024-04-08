@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.HelpMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.entity.Help">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="img" column="img" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="time" column="time" jdbcType="VARCHAR"/>
+            <result property="solved" column="solved" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,img,status,user_id,time,solved
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Help">
+        select
+        <include refid="Base_Column_List" />
+        from help
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="title != null"> and title like concat('%', #{title}, '%')</if>
+            <if test="content != null"> and content like concat('%', #{content}, '%')</if>
+            <if test="img != null"> and img like concat('%', #{img}, '%')</if>
+            <if test="status != null"> and status like concat('%', #{status}, '%')</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="time != null"> and time like concat('%', #{time}, '%')</if>
+            <if test="solved != null"> and solved like concat('%', #{solved}, '%')</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Help">
+        select
+        <include refid="Base_Column_List" />
+        from help
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from help
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Help" useGeneratedKeys="true" keyProperty="id">
+        insert into help
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="img != null">img,</if>
+            <if test="status != null">status,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="time != null">time,</if>
+            <if test="solved != null">solved,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="content != null">#{content},</if>
+            <if test="img != null">#{img},</if>
+            <if test="status != null">#{status},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="time != null">#{time},</if>
+            <if test="solved != null">#{solved},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Help">
+        update help
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="solved != null">
+                solved = #{solved},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
