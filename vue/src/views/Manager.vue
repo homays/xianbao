@@ -49,6 +49,7 @@
             <el-menu-item index="/Posts">帖子信息</el-menu-item>
             <el-menu-item index="/Help">求助信息</el-menu-item>
             <el-menu-item index="/Address">地址信息</el-menu-item>
+            <el-menu-item index="/FeedBack">反馈信息</el-menu-item>
           </el-submenu>
 
           <el-submenu index="user">
