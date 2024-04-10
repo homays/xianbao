@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
 import com.example.entity.Goods;
 import com.example.service.GoodsService;
-import com.example.vo.req.GoodsVO;
+import com.example.vo.req.GoodsQueryDTO;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -81,6 +82,15 @@ public class GoodsController {
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<Goods> page = goodsService.selectPage(goods, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    /**
+     * 前端首页分页查询
+     */
+    @PostMapping("/selectFrontPage")
+    public Result selectFrontPage(@RequestBody GoodsQueryDTO goodsQueryDTO, Goods goods) {
+        Page<Goods> page = goodsService.selectFrontPage(goodsQueryDTO, goods);
         return Result.success(page);
     }
 

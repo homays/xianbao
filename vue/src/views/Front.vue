@@ -5,15 +5,11 @@
     <div class="front-header">
       <div class="front-header-left">
         <img src="@/assets/imgs/logo.png" alt="">
-        <div class="title">项目前台</div>
+        <div class="title">闲宝</div>
       </div>
       <div class="front-header-center">
-        <div class="front-header-nav">
-          <el-menu :default-active="$route.path" mode="horizontal" router>
-						<el-menu-item index="/front/home">首页</el-menu-item>
-						<el-menu-item index="/front/person">个人中心</el-menu-item>
-          </el-menu>
-        </div>
+        <div class="menu" v-for="item in menus" :key="item.path"
+             :class="{'menu-active' : item.path === $route.path }">{{ item.text }}</div>
       </div>
       <div class="front-header-right">
         <div v-if="!user.username">
@@ -23,8 +19,8 @@
         <div v-else>
           <el-dropdown>
             <div class="front-header-dropdown">
-              <img :src="user.avatar" alt="">
-              <div style="margin-left: 10px">
+              <img :src="user.avatar" alt="" style="border-radius: 50%">
+              <div style="margin-left: 10px; color: #eee; cursor: pointer">
                 <span>{{ user.name }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
               </div>
             </div>
@@ -55,6 +51,13 @@ export default {
       top: '',
       notice: [],
       user: JSON.parse(localStorage.getItem("xm-user") || '{}'),
+      menus: [
+        { text: '热卖专区', path: '/front/home' },
+        { text: '社区广场', path: '/front/posts' },
+        { text: '求购专区', path: '/front/help' },
+        { text: '系统公告', path: '/front/notice' },
+        { text: '留言反馈', path: '/front/feedback' },
+      ]
     }
   },
 
@@ -93,4 +96,16 @@ export default {
 
 <style scoped>
   @import "@/assets/css/front.css";
+  .menu {
+    color: #eee;
+    font-size: 16px;
+    padding: 0 20px;
+    cursor: pointer;
+  }
+  .menu:hover {
+    color: orange;
+  }
+  .menu-active {
+    color: orange;
+  }
 </style>
