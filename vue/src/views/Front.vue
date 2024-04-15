@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background-color: #f8f8f8">
     <div class="front-notice"><i class="el-icon-bell" style="margin-right: 2px"></i>公告：{{ top }}</div>
     <!--头部-->
     <div class="front-header">
@@ -36,16 +36,19 @@
     <!--主体-->
     <div class="main-body">
       <router-view ref="child" @update:user="updateUser" />
+      <Footer />
     </div>
   </div>
 
 </template>
 
 <script>
-
+import Footer from '@/components/Footer.vue'
 export default {
   name: "FrontLayout",
-
+  components: {
+    Footer
+  },
   data () {
     return {
       top: '',

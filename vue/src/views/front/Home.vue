@@ -1,5 +1,5 @@
 <template>
-  <div style="background-color: #eeeeee; min-height: 100vh">
+  <div style="min-height: 100vh">
     <div class="bg">
       <div style="width: 600px">
         <div style="text-align: center; color: #eee; font-size: 30px; margin-bottom: 20px">好看、好用、好玩，都在这里</div>
