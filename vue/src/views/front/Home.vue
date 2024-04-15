@@ -26,7 +26,7 @@
       <div>
         <el-row :gutter="15">
           <el-col :span="6" v-for="item in goodsList" :key="item.id">
-            <div style="margin-bottom: 20px" class="goods-item">
+            <div style="margin-bottom: 20px" class="goods-item" @click="$router.push('/front/goodsDetail?id=' + item.id)">
               <img :src="item.img" alt="" style="width: 100%; display: block; height: 260px; margin-bottom: 10px; border-radius: 5px">
               <div style="font-size: 16px; height: 40px; color: #555; margin-bottom: 10px" class="line2 goods-name">{{ item.name }}</div>
               <div style="display: flex; align-items: baseline">

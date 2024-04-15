@@ -1,15 +1,16 @@
 <template>
-  <div style="background-color: #f8f8f8">
-    <div class="front-notice"><i class="el-icon-bell" style="margin-right: 2px"></i>公告：{{ top }}</div>
+  <div style="background-color: #f8f8f8; min-height: 100vh">
+<!--    <div class="front-notice"><i class="el-icon-bell" style="margin-right: 2px"></i>公告：{{ top }}</div>-->
     <!--头部-->
     <div class="front-header">
       <div class="front-header-left">
-        <img src="@/assets/imgs/logo.png" alt="">
-        <div class="title">闲宝</div>
+        <img src="@/assets/imgs/logo.png" alt="" @click="$router.push('/front/home')">
+        <div class="title" @click="$router.push('/front/home')">闲宝</div>
       </div>
       <div class="front-header-center">
-        <div class="menu" v-for="item in menus" :key="item.path"
-             :class="{'menu-active' : item.path === $route.path }">{{ item.text }}</div>
+        <div class="menu" v-for="item in menus" :key="item.path" @click="$router.push(item.path)"
+             :class="{'menu-active' : item.path === $route.path }">{{ item.text }}
+        </div>
       </div>
       <div class="front-header-right">
         <div v-if="!user.username">
@@ -35,31 +36,32 @@
     </div>
     <!--主体-->
     <div class="main-body">
-      <router-view ref="child" @update:user="updateUser" />
-      <Footer />
+      <router-view ref="child" @update:user="updateUser"/>
     </div>
+    <Footer/>
   </div>
 
 </template>
 
 <script>
 import Footer from '@/components/Footer.vue'
+
 export default {
   name: "FrontLayout",
   components: {
     Footer
   },
-  data () {
+  data() {
     return {
       top: '',
       notice: [],
       user: JSON.parse(localStorage.getItem("xm-user") || '{}'),
       menus: [
-        { text: '热卖专区', path: '/front/home' },
-        { text: '社区广场', path: '/front/posts' },
-        { text: '求购专区', path: '/front/help' },
-        { text: '系统公告', path: '/front/notice' },
-        { text: '留言反馈', path: '/front/feedback' },
+        {text: '热卖专区', path: '/front/home'},
+        {text: '社区广场', path: '/front/posts'},
+        {text: '求购专区', path: '/front/help'},
+        {text: '系统公告', path: '/front/notice'},
+        {text: '留言反馈', path: '/front/feedback'},
       ]
     }
   },
@@ -98,17 +100,20 @@ export default {
 </script>
 
 <style scoped>
-  @import "@/assets/css/front.css";
-  .menu {
-    color: #eee;
-    font-size: 16px;
-    padding: 0 20px;
-    cursor: pointer;
-  }
-  .menu:hover {
-    color: orange;
-  }
-  .menu-active {
-    color: orange;
-  }
+@import "@/assets/css/front.css";
+
+.menu {
+  color: #eee;
+  font-size: 16px;
+  padding: 0 20px;
+  cursor: pointer;
+}
+
+.menu:hover {
+  color: orange;
+}
+
+.menu-active {
+  color: orange;
+}
 </style>

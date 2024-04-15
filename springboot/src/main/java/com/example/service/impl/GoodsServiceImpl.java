@@ -42,7 +42,10 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public Goods selectById(Integer id) {
-        return goodsMapper.selectById(id);
+        Goods goods = goodsMapper.selectById(id);
+        User user = userMapper.selectById(goods.getUserId());
+        goods.setUserName(user.getName());
+        return goods;
     }
 
     @Override
@@ -61,8 +64,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         Page<Goods> goodsPage = goodsMapper.selectPage(page, wrapper);
         List<Goods> records = goodsPage.getRecords();
         List<Goods> collect = records.stream().map(item -> {
-            User user = userMapper.selectOne(Wrappers.<User>lambdaQuery()
-                    .eq(User::getId, item.getUserId()));
+            User user = userMapper.selectById(item.getUserId());
             item.setUserName(user.getName());
             return item;
         }).collect(Collectors.toList());

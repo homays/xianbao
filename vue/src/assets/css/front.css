@@ -53,10 +53,9 @@
 /*页面具体样式自定义*/
 .main-content {
     width: 100%;
-    margin: 5px auto;
 }
 .main-body {
-    min-height: calc(100vh - 170px);
+    min-height: calc(100vh - 150px);
 }
 
 /* ElementUI 样式覆盖 */
