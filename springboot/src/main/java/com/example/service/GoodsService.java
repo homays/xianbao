@@ -24,4 +24,7 @@ public interface GoodsService extends IService<Goods> {
 
     Page<Goods> selectFrontPage(GoodsQueryDTO goodsQueryDTO, Goods goods);
 
+    void like(Integer goodsId);
+
+    void collect(Integer goodsId);
 }

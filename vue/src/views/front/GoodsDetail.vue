@@ -14,8 +14,10 @@
         <div style="margin-bottom: 20px"><span style="color: #666">卖家：</span> {{ goods.userName }}</div>
         <div style="margin-bottom: 40px"><span style="color: #666">发布日期：</span> {{ goods.date }}</div>
         <div>
-          <el-button size="medium" style="background-color: orangered; color: #eee; border-color: orangered">点赞</el-button>
-          <el-button size="medium" type="warning">收藏</el-button>
+          <el-button v-if="!goods.userLike" size="medium" style="background-color: orangered; color: #eee; border-color: orangered" @click="like">点赞</el-button>
+          <el-button v-if="goods.userLike" size="medium" style="background-color: orangered; color: #eee; border-color: orangered" @click="like">已点赞</el-button>
+          <el-button v-if="!goods.userCollect" size="medium" type="warning" @click="collect">收藏</el-button>
+          <el-button v-if="goods.userCollect" size="medium" type="warning" @click="collect">已收藏</el-button>
           <el-button size="medium" type="danger">立即购买</el-button>
         </div>
       </div>
@@ -59,6 +61,26 @@ export default {
     load() {
       this.$request.get('/goods/selectById/' + this.id).then(res => {
         this.goods = res.data || {}
+      })
+    },
+    like() {
+      this.$request.post('/goods/like/' + this.goods.id).then(res => {
+        if (res.code === '200') {
+          this.$message.success('操作成功')
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.load()
+      })
+    },
+    collect() {
+      this.$request.post('/goods/collect/' + this.goods.id).then(res => {
+        if (res.code === '200') {
+          this.$message.success('操作成功')
+        } else {
+          this.$message.error(res.msg)
+        }
+        this.load()
       })
     }
   }

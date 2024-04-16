@@ -94,4 +94,22 @@ public class GoodsController {
         return Result.success(page);
     }
 
+    /**
+     * 点赞
+     */
+    @PostMapping("/like/{id}")
+    public Result like(@PathVariable("id") Integer goodsId) {
+        goodsService.like(goodsId);
+        return Result.success();
+    }
+
+    /**
+     * 收藏
+     */
+    @PostMapping("/collect/{id}")
+    public Result collect(@PathVariable("id") Integer goodsId) {
+        goodsService.collect(goodsId);
+        return Result.success();
+    }
+
 }
