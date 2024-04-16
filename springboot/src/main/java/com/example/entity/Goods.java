@@ -94,6 +94,18 @@ public class Goods implements Serializable {
     @TableField(exist = false)
     private Boolean userCollect;
 
+    /**
+     * 点赞数量
+     */
+    @TableField(exist = false)
+    private Long likeCount;
+
+    /**
+     * 收藏数量
+     */
+    @TableField(exist = false)
+    private Long collectCount;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

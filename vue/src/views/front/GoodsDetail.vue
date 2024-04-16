@@ -6,7 +6,7 @@
         <div style="font-weight: bold; font-size: 26px; margin: 20px 0">{{ goods.name }}</div>
         <div style="color: #666; font-size: 16px;">
           <span>浏览 {{ goods.readCount }}</span>
-          <span style="margin-left: 20px">点赞 {{ goods.likesCount }}</span>
+          <span style="margin-left: 20px">点赞 {{ goods.likeCount }}</span>
           <span style="margin-left: 20px">收藏 {{ goods.collectCount }}</span>
         </div>
         <div style="color: red; font-size: 24px; margin: 40px 0">￥{{ goods.price }}</div>

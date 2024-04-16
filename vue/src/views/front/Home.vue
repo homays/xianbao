@@ -32,7 +32,7 @@
               <div style="display: flex; align-items: baseline">
                 <strong style="color: red; font-size: 24px">￥{{ item.price }}</strong>
                 <span style="margin-left: 20px; color: #666">{{ item.readCount }}人浏览</span>
-                <span style="margin-left: 20px; color: #666">100人点赞</span>
+                <span style="margin-left: 20px; color: #666">{{ item.likeCount }}人点赞</span>
               </div>
             </div>
           </el-col>

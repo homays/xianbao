@@ -10,4 +10,6 @@ public class Constants {
 
     public static final String XIANBAO_GOODS_COLLECT = "xianbao:goods:collect:";
 
+    public static final String XIANBAO_GOODS_READCOUNT = "xianbao:goods:readcount:";
+
 }

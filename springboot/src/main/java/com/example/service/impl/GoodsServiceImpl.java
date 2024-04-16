@@ -17,11 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.common.Constants.XIANBAO_GOODS_COLLECT;
-import static com.example.common.Constants.XIANBAO_GOODS_LIKE;
+import static com.example.common.Constants.*;
 
 @Service
 public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements GoodsService {
@@ -35,6 +33,9 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public void add(Goods goods) {
+        String userId = ThreadLocalUtil.getUserId();
+        User user = userMapper.selectById(userId);
+        goods.setUserName(user.getUsername());
         goodsMapper.insert(goods);
     }
 
@@ -60,6 +61,14 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         goods.setUserLike(isLike);
         boolean isCollect = redisUtil.isMember(XIANBAO_GOODS_COLLECT + id, userId);
         goods.setUserCollect(isCollect);
+        // 获取点赞数量
+        Long likeCount = redisUtil.size(XIANBAO_GOODS_LIKE + id);
+        Long collectCount = redisUtil.size(XIANBAO_GOODS_COLLECT + id);
+        goods.setLikeCount(likeCount);
+        goods.setCollectCount(collectCount);
+        // 获取阅读数量
+        Long readCount = redisUtil.incr(XIANBAO_GOODS_READCOUNT + id);
+        goods.setReadCount(readCount.intValue());
         return goods;
     }
 
@@ -99,7 +108,19 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         } else if (StrUtil.isNotBlank(sort) && sort.equals("最热")) {
             wrapper.orderByDesc(StrUtil.isNotBlank(String.valueOf(goods.getReadCount())), Goods::getReadCount);
         }
-        return goodsMapper.selectPage(page, wrapper);
+        Page<Goods> goodsPage = goodsMapper.selectPage(page, wrapper);
+        List<Goods> records = goodsPage.getRecords();
+        List<Goods> collect = records.stream().peek(item -> {
+            Goods dbGoods = this.selectById(item.getId());
+            item.setUserName(dbGoods.getName());
+            item.setUserLike(dbGoods.getUserLike());
+            item.setUserCollect(dbGoods.getUserCollect());
+            item.setLikeCount(dbGoods.getLikeCount());
+            item.setCollectCount(dbGoods.getCollectCount());
+            item.setReadCount(dbGoods.getReadCount());
+        }).collect(Collectors.toList());
+        goodsPage.setRecords(collect);
+        return goodsPage;
     }
 
     @Override
