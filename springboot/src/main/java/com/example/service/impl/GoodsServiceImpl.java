@@ -104,8 +104,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public void like(Integer goodsId) {
-        Map<String, Object> claims = ThreadLocalUtil.get();
-        String userId = claims.get("userId").toString();
+        String userId = ThreadLocalUtil.getUserId();
         // 判断用户是否点赞
         boolean isLike = redisUtil.isMember(XIANBAO_GOODS_LIKE + goodsId, userId);
         if (!isLike) {

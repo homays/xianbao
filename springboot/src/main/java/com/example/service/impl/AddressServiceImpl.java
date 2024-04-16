@@ -28,8 +28,8 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
 
     @Override
     public void add(Address address) {
-        Map<String, Object> claims = ThreadLocalUtil.get();
-        address.setUserId(Integer.parseInt(claims.get("userId").toString()));
+        String userId = ThreadLocalUtil.getUserId();
+        address.setUserId(Integer.parseInt(userId));
         addressMapper.insert(address);
     }
 

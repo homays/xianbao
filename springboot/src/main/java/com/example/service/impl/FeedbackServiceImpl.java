@@ -29,8 +29,8 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
 
     @Override
     public void add(Feedback feedback) {
-        Map<String, Object> claims = ThreadLocalUtil.get();
-        feedback.setUserId(Integer.parseInt(claims.get("userId").toString()));
+        String userId = ThreadLocalUtil.getUserId();
+        feedback.setUserId(Integer.parseInt(userId));
         feedback.setCreatetime(DateUtil.now());
         feedbackMapper.insert(feedback);
     }

@@ -30,8 +30,8 @@ public class PostsServiceImpl extends ServiceImpl<PostsMapper, Posts> implements
     @Override
     public void add(Posts posts) {
         posts.setTime(DateUtil.now());
-        Map<String, Object> claims = ThreadLocalUtil.get();
-        posts.setUserId(Integer.parseInt(claims.get("userId").toString()));
+        String userId = ThreadLocalUtil.getUserId();
+        posts.setUserId(Integer.parseInt(userId));
         posts.setStatus("待审核");
         postsMapper.insert(posts);
     }

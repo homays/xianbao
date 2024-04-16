@@ -33,8 +33,8 @@ public class HelpServiceImpl extends ServiceImpl<HelpMapper, Help> implements He
         Help help = new Help();
         BeanUtil.copyProperties(helpDTO, help);
         help.setTime(DateUtil.now());
-        Map<String, Object> claims = ThreadLocalUtil.get();
-        help.setUserId(Integer.parseInt(claims.get("userId").toString()));
+        String userId = ThreadLocalUtil.getUserId();
+        help.setUserId(Integer.parseInt(userId));
         help.setStatus("待审核");
         help.setSolved("未解决");
         helpMapper.insert(help);

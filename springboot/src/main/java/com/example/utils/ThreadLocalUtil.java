@@ -1,5 +1,7 @@
 package com.example.utils;
 
+import java.util.Map;
+
 /**
  * ThreadLocal 工具类
  */
@@ -22,5 +24,10 @@ public class ThreadLocalUtil {
     //清除ThreadLocal 防止内存泄漏
     public static void remove() {
         THREAD_LOCAL.remove();
+    }
+
+    public static String getUserId() {
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        return claims.get("userId").toString();
     }
 }
