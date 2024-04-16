@@ -12,6 +12,10 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+  redis:
+    host: localhost
+    port: 6379
+    database: 4
 
 # 配置mybatis-plus实体和xml映射
 mybatis-plus:
@@ -23,6 +27,8 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+
 
 # 分页
 #pagehelper:
