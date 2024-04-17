@@ -5,12 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Description
- *
- * @author Arrebol
- * @date 2024/4/17
- */
 @Data
 @Builder
 @AllArgsConstructor
