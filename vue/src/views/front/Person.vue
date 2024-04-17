@@ -46,7 +46,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="fromVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="save">确 定</el-button>
       </div>
     </el-dialog>
@@ -88,7 +88,7 @@ export default {
   methods: {
     update() {
       // 保存当前的用户信息到数据库
-      this.$request.put('/admin/update', this.user).then(res => {
+      this.$request.put('/user/update', this.user).then(res => {
         if (res.code === '200') {
           // 成功更新
           this.$message.success('保存成功')

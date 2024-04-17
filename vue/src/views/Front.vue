@@ -27,6 +27,9 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
+                <div @click="$router.push('/front/person')">个人信息</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <div style="text-decoration: none" @click="$router.push('/front/collect')">我的收藏</div>
               </el-dropdown-item>
               <el-dropdown-item>
