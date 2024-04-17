@@ -129,11 +129,15 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         // 判断用户是否点赞
         boolean isLike = redisUtil.isMember(XIANBAO_GOODS_LIKE + goodsId, userId);
         if (!isLike) {
-            // 存储点赞
+            // 存储商品中的点赞信息
             redisUtil.sAdd(XIANBAO_GOODS_LIKE + goodsId, userId);
+            // 存储用户的点赞商品
+            redisUtil.sAdd(XIANBAO_USER_GOODS_LIKE + userId, goodsId.toString());
         } else {
             // 删除点赞
             redisUtil.srem(XIANBAO_GOODS_LIKE + goodsId, userId);
+            // 删除用户的点赞商品
+            redisUtil.srem(XIANBAO_USER_GOODS_LIKE + userId, goodsId.toString());
         }
     }
 
@@ -146,9 +150,13 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         if (!isCollect) {
             // 存储收藏
             redisUtil.sAdd(XIANBAO_GOODS_COLLECT + goodsId, userId);
+            // 存储用户的收藏商品
+            redisUtil.sAdd(XIANBAO_USER_GOODS_COLLECT + userId, goodsId.toString());
         } else {
             // 删除收藏
             redisUtil.srem(XIANBAO_GOODS_COLLECT + goodsId, userId);
+            // 删除用户的收藏商品
+            redisUtil.srem(XIANBAO_USER_GOODS_COLLECT + userId, goodsId.toString());
         }
     }
 }

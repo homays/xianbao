@@ -12,4 +12,8 @@ public class Constants {
 
     public static final String XIANBAO_GOODS_READCOUNT = "xianbao:goods:readcount:";
 
+    public static final String XIANBAO_USER_GOODS_LIKE = "xianbao:user:goods:like:";
+
+    public static final String XIANBAO_USER_GOODS_COLLECT = "xianbao:user:goods:collect:";
+
 }
