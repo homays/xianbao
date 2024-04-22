@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.entity.Comment">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="time" column="time" jdbcType="VARCHAR"/>
+            <result property="fid" column="fid" jdbcType="INTEGER"/>
+            <result property="module" column="module" jdbcType="VARCHAR"/>
+            <result property="rootId" column="root_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,content,user_id,pid,time,fid,module,root_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Comment">
+        select
+        <include refid="Base_Column_List" />
+        from comment
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="content != null"> and content like concat('%', #{content}, '%')</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="pid != null"> and pid = #{pid}</if>
+            <if test="time != null"> and time like concat('%', #{time}, '%')</if>
+            <if test="fid != null"> and fid = #{fid}</if>
+            <if test="module != null"> and module like concat('%', #{module}, '%')</if>
+            <if test="rootId != null"> and root_id = #{rootId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Comment">
+        select
+        <include refid="Base_Column_List" />
+        from comment
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from comment
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="content != null">content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="pid != null">pid,</if>
+            <if test="time != null">time,</if>
+            <if test="fid != null">fid,</if>
+            <if test="module != null">module,</if>
+            <if test="rootId != null">root_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="content != null">#{content},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="time != null">#{time},</if>
+            <if test="fid != null">#{fid},</if>
+            <if test="module != null">#{module},</if>
+            <if test="rootId != null">#{rootId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Comment">
+        update comment
+        <set>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="pid != null">
+                pid = #{pid},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="fid != null">
+                fid = #{fid},
+            </if>
+            <if test="module != null">
+                module = #{module},
+            </if>
+            <if test="rootId != null">
+                root_id = #{rootId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

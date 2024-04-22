@@ -30,6 +30,7 @@ const routes = [
       { path: 'help', name: 'Help', meta: { name: '求助信息' }, component: () => import('../views/manager/Help') },
       { path: 'address', name: 'Address', meta: { name: '地址信息' }, component: () => import('../views/manager/Address') },
       { path: 'feedBack', name: 'FeedBack', meta: { name: '反馈信息' }, component: () => import('../views/manager/FeedBack') },
+      { path: 'comment', name: 'Comment', meta: { name: '评论信息' }, component: () => import('../views/manager/Comment') },
     ]
   },
   {

@@ -2,8 +2,10 @@
   <div style="margin: 0 auto; padding: 10px 0; width: 50%">
     <div style="display: flex; grid-gap: 20px; margin-bottom: 40px">
       <img :src="goods.img" alt="" style="width: 50%; height: 400px; display: block">
-      <div>
-        <div style="font-weight: bold; font-size: 26px; margin: 20px 0">{{ goods.name }}</div>
+      <div style="flex: 1; width: 0">
+        <el-tooltip :content="goods.name" placement="top-start">
+          <div style="font-weight: bold; font-size: 26px; margin: 20px 0" class="line1">{{ goods.name }}</div>
+        </el-tooltip>
         <div style="color: #666; font-size: 16px;">
           <span>浏览 {{ goods.readCount }}</span>
           <span style="margin-left: 20px">点赞 {{ goods.likeCount }}</span>
@@ -14,8 +16,12 @@
         <div style="margin-bottom: 20px"><span style="color: #666">卖家：</span> {{ goods.userName }}</div>
         <div style="margin-bottom: 40px"><span style="color: #666">发布日期：</span> {{ goods.date }}</div>
         <div>
-          <el-button v-if="!goods.userLike" size="medium" style="background-color: orangered; color: #eee; border-color: orangered" @click="like">点赞</el-button>
-          <el-button v-if="goods.userLike" size="medium" style="background-color: orangered; color: #eee; border-color: orangered" @click="like">已点赞</el-button>
+          <el-button v-if="!goods.userLike" size="medium"
+                     style="background-color: orangered; color: #eee; border-color: orangered" @click="like">点赞
+          </el-button>
+          <el-button v-if="goods.userLike" size="medium"
+                     style="background-color: orangered; color: #eee; border-color: orangered" @click="like">已点赞
+          </el-button>
           <el-button v-if="!goods.userCollect" size="medium" type="warning" @click="collect">收藏</el-button>
           <el-button v-if="goods.userCollect" size="medium" type="warning" @click="collect">已收藏</el-button>
           <el-button size="medium" type="danger">立即购买</el-button>
@@ -25,8 +31,12 @@
 
     <div>
       <div style="display: flex; border-bottom: 1px solid orangered; margin-bottom: 10px">
-        <div style="padding: 10px 20px; cursor: pointer" :class="{ 'active' : current === '商品详情' }" @click="changeItem('商品详情')">商品详情</div>
-        <div style="padding: 10px 20px; cursor: pointer" :class="{ 'active' : current === '商品评论' }" @click="changeItem('商品评论')">商品评论</div>
+        <div style="padding: 10px 20px; cursor: pointer" :class="{ 'active' : current === '商品详情' }"
+             @click="changeItem('商品详情')">商品详情
+        </div>
+        <div style="padding: 10px 20px; cursor: pointer" :class="{ 'active' : current === '商品评论' }"
+             @click="changeItem('商品评论')">商品评论
+        </div>
       </div>
 
       <div v-if="current === '商品详情'">
@@ -34,7 +44,7 @@
       </div>
 
       <div v-if="current === '商品评论'">
-
+        <Comment :fid="id" module="goods"/>
       </div>
 
     </div>
@@ -42,8 +52,10 @@
 </template>
 
 <script>
+import Comment from "@/components/Comment.vue";
 export default {
   name: "GoodsDetail",
+  components: {Comment},
   data() {
     return {
       id: this.$route.query.id,
