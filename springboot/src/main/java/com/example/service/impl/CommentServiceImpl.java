@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -53,6 +54,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public void deleteById(Integer id) {
         commentMapper.deleteById(id);
+    }
+
+    @Override
+    public void deleteDeep(Integer id) {
+        Comment comment = commentMapper.selectOne(Wrappers.<Comment>lambdaQuery()
+                .eq(Comment::getPid, id));
+        if (ObjectUtil.isNull(comment)) {
+            return;
+        }
+        commentMapper.deleteById(id);
+        this.deleteDeep(comment.getId());
     }
 
     @Override

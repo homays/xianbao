@@ -75,7 +75,7 @@ export default {
     },
     delComment(commentId) {   // 单个删除
       this.$confirm('您确定删除吗？', '确认删除', {type: "warning"}).then(response => {
-        this.$request.delete('/comment/delete/' + commentId).then(res => {
+        this.$request.delete('/comment/deleteDeep/' + commentId).then(res => {
           if (res.code === '200') {   // 表示操作成功
             this.$message.success('操作成功')
             this.loadComment()

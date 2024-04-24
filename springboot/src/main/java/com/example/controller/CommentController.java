@@ -36,6 +36,12 @@ public class CommentController {
         return Result.success();
     }
 
+    @DeleteMapping("/deleteDeep/{id}")
+    public Result deleteDeep(@PathVariable Integer id) {
+        commentService.deleteDeep(id);
+        return Result.success();
+    }
+
     /**
      * 批量删除
      */

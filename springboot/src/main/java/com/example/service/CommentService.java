@@ -24,4 +24,6 @@ public interface CommentService extends IService<Comment> {
     List<CommentVO> selectTree(Integer fid, String module);
 
     Integer selectCount(Integer fid, String module);
+
+    void deleteDeep(Integer id);
 }
