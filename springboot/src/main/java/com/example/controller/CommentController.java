@@ -83,10 +83,22 @@ public class CommentController {
         return Result.success(page);
     }
 
+    /**
+     * 获取评论
+     */
     @GetMapping("/selectTree/{fid}/{module}")
-    public Result selectAll(@PathVariable Integer fid, @PathVariable String module) {
+    public Result selectTree(@PathVariable Integer fid, @PathVariable String module) {
         List<CommentVO> list = commentService.selectTree(fid, module);
         return Result.success(list);
+    }
+
+    /**
+     * 获取评论数量
+     */
+    @GetMapping("/selectCount/{fid}/{module}")
+    public Result selectCount(@PathVariable Integer fid, @PathVariable String module) {
+        Integer commentCount = commentService.selectCount(fid, module);
+        return Result.success(commentCount);
     }
 
 }

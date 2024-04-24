@@ -31,7 +31,7 @@
           <div v-for="sub in item.chrildrenList" style="display: flex; margin-bottom: 20px">
             <img :src="sub.userImg" alt="" style="width: 50px; height: 50px; border-radius: 50%">
             <div style="padding-left: 15px; flex: 1">
-              <div style="margin-bottom: 10px; color: #666">{{ sub.userName }} <span v-if="sub.parentName === item.userName">回复：{{ sub.parentName }}</span></div>
+              <div style="margin-bottom: 10px; color: #666">{{ sub.userName }} <span>回复：{{ sub.parentName }}</span></div>
               <div style="margin-bottom: 5px">{{ sub.content }}</div>
               <div style="color: #666; font-size: 13px; margin-bottom: 5px">
                 <span>{{ sub.time }}</span>
@@ -91,9 +91,9 @@ export default {
         this.commentList = res.data || []
       })
 
-      // this.$request.get('/comment/selectCount/' + this.fid + '/' + this.module).then(res => {
-      //   this.commentCount = res.data || 0
-      // })
+      this.$request.get('/comment/selectCount/' + this.fid + '/' + this.module).then(res => {
+        this.commentCount = res.data || 0
+      })
     },
     addComment(comment) {  //  comment 有值表示这是回复
       let data = { fid: this.fid, userId: this.user.id, module: this.module, content: this.content }

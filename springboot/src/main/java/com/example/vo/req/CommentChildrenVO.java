@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentChildrenVO {
 
+    private Integer id;
     private String content;
     private Integer userId;
     private Integer pid;

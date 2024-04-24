@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class CommentVO {
 
+    private Integer id;
     private String content;
     private Integer userId;
     private Integer pid;
