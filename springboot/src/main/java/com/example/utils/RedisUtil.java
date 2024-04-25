@@ -71,4 +71,8 @@ public class RedisUtil<T> {
     public Long incr(String key) {
         return stringRedisTemplate.opsForValue().increment(key);
     }
+
+    public String get(String key) {
+        return stringRedisTemplate.opsForValue().get(key);
+    }
 }
