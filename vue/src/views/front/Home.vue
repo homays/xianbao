@@ -10,7 +10,11 @@
       </div>
     </div>
 
-    <div style="width: 70%; background-color: #fff; margin: 10px auto; padding: 20px; border-radius: 5px">
+    <div style="width: 70%; background-color: #fff; margin: 10px auto; padding: 20px; border-radius: 5px; position: relative">
+
+      <el-button @click="$router.push('/front/addGoods')" style="position: absolute; top: 20px; right: -150px" size="medium" type="primary" plain>发布商品</el-button>
+      <el-button style="position: absolute; top: 70px; right: -150px" size="medium" type="primary" plain>发布求购</el-button>
+
       <div style="margin-bottom: 20px">
         <el-select v-model="category" size="medium" style="width: 200px" @change="loadGoods(1)">
           <el-option value="全部"></el-option>
@@ -39,6 +43,18 @@
         </el-row>
       </div>
 
+      <div style="margin: 15px 0">
+        <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="pageNum"
+            :page-sizes="[5, 10, 20]"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="total">
+        </el-pagination>
+      </div>
+
     </div>
 
   </div>
@@ -53,7 +69,7 @@ export default {
       categoryList: [],
       goodsList: [],  // 所有的数据
       pageNum: 1,   // 当前的页码
-      pageSize: 10,  // 每页显示的个数
+      pageSize: 12,  // 每页显示的个数
       total: 0,
       category: '全部',
       sort: '最新'
@@ -63,8 +79,10 @@ export default {
     this.loadCategory()
     this.loadGoods(1)
   },
-  // methods：本页面所有的点击事件或者其他函数定义区
   methods: {
+    handleCurrentChange(pageNum) {
+      this.loadGoods(pageNum)
+    },
     loadCategory() {
       this.$request.get('/category/selectAll').then(res => {
         this.categoryList = res.data || []

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
+import com.example.common.enums.StatusEnum;
 import com.example.entity.Goods;
 import com.example.service.GoodsService;
 import com.example.vo.req.GoodsQueryDTO;
@@ -52,7 +53,7 @@ public class GoodsController {
      */
     @PutMapping("/update")
     public Result updateById(@RequestBody Goods goods) {
-        goodsService.updateById(goods);
+        goodsService.updateByGoods(goods);
         return Result.success();
     }
 

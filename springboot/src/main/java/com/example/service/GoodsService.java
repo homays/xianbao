@@ -27,4 +27,6 @@ public interface GoodsService extends IService<Goods> {
     void like(Integer goodsId);
 
     void collect(Integer goodsId);
+
+    void updateByGoods(Goods goods);
 }

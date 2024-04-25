@@ -1,9 +1,12 @@
 package com.example.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.common.enums.RoleEnum;
+import com.example.common.enums.StatusEnum;
 import com.example.entity.Goods;
 import com.example.entity.User;
 import com.example.mapper.GoodsMapper;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.example.common.Constants.*;
@@ -36,7 +40,19 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         String userId = ThreadLocalUtil.getUserId();
         User user = userMapper.selectById(userId);
         goods.setUserName(user.getUsername());
+        goods.setDate(DateUtil.now());
+        goods.setStatus(StatusEnum.TO_BE_REVIEWED.value);
         goodsMapper.insert(goods);
+    }
+
+    @Override
+    public void updateByGoods(Goods goods) {
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        String role = claims.get("role").toString();
+        if (RoleEnum.USER.name().equals(role)) {
+            goods.setStatus(StatusEnum.TO_BE_REVIEWED.value);
+        }
+        goodsMapper.updateById(goods);
     }
 
     @Override
@@ -79,18 +95,25 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public Page<Goods> selectPage(Goods goods, Integer pageNum, Integer pageSize) {
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        Integer userId = Integer.parseInt(claims.get("userId").toString());
+        String role = claims.get("role").toString();
+        if (RoleEnum.USER.name().equals(role)) {
+            goods.setUserId(userId);
+        }
         Page<Goods> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(goods.getUserId() != null, Goods::getUserId, goods.getUserId());
         wrapper.like(StrUtil.isNotBlank(goods.getName()), Goods::getName, goods.getName());
         wrapper.like(StrUtil.isNotBlank(goods.getContent()), Goods::getContent, goods.getContent());
         wrapper.like(StrUtil.isNotBlank(goods.getAddress()), Goods::getAddress, goods.getAddress());
         wrapper.like(StrUtil.isNotBlank(goods.getCategory()), Goods::getContent, goods.getCategory());
+        wrapper.orderByDesc(Goods::getDate);
         Page<Goods> goodsPage = goodsMapper.selectPage(page, wrapper);
         List<Goods> records = goodsPage.getRecords();
-        List<Goods> collect = records.stream().map(item -> {
+        List<Goods> collect = records.stream().peek(item -> {
             User user = userMapper.selectById(item.getUserId());
             item.setUserName(user.getName());
-            return item;
         }).collect(Collectors.toList());
         goodsPage.setRecords(collect);
         return goodsPage;
@@ -102,15 +125,17 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         String sort = goodsQueryDTO.getSort();
         Page<Goods> page = new Page<>(goodsQueryDTO.getPageNum(), goodsQueryDTO.getPageSize());
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Goods::getStatus, StatusEnum.APPROVE.value);
         wrapper.like(StrUtil.isNotBlank(goodsQueryDTO.getCategory()), Goods::getCategory, goodsQueryDTO.getCategory());
         if (StrUtil.isNotBlank(sort) && sort.equals("最新")) {
-            wrapper.orderByDesc(StrUtil.isNotBlank(String.valueOf(goods.getId())), Goods::getId);
-        } else if (StrUtil.isNotBlank(sort) && sort.equals("最热")) {
-            wrapper.orderByDesc(StrUtil.isNotBlank(String.valueOf(goods.getReadCount())), Goods::getReadCount);
+            wrapper.orderByDesc(Goods::getId);
+        }
+        if (StrUtil.isNotBlank(sort) && sort.equals("最热")) {
+            wrapper.orderByDesc(Goods::getReadCount);
         }
         Page<Goods> goodsPage = goodsMapper.selectPage(page, wrapper);
         List<Goods> records = goodsPage.getRecords();
-        List<Goods> collect = records.stream().peek(item -> {
+        List<Goods> collect = records.stream().map(item -> {
             Goods dbGoods = this.selectById(item.getId());
             item.setUserName(dbGoods.getName());
             item.setUserLike(dbGoods.getUserLike());
@@ -118,6 +143,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             item.setLikeCount(dbGoods.getLikeCount());
             item.setCollectCount(dbGoods.getCollectCount());
             item.setReadCount(dbGoods.getReadCount());
+            return dbGoods;
         }).collect(Collectors.toList());
         goodsPage.setRecords(collect);
         return goodsPage;
@@ -159,6 +185,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
             redisUtil.srem(XIANBAO_USER_GOODS_COLLECT + userId, goodsId.toString());
         }
     }
+
 }
 
 

@@ -1,18 +1,8 @@
 <template>
-  <div>
-    <div class="search">
-      <el-input placeholder="请输入关键字查询" style="width: 200px" v-model="name"></el-input>
-      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
-      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
-    </div>
+  <div style="width: 70%; margin: 10px auto" class="card">
 
-    <div class="operation">
-      <el-button type="danger" plain @click="delBatch">批量删除</el-button>
-    </div>
-
-    <div class="table">
-      <el-table :data="tableData" strip @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
+    <div>
+      <el-table :data="tableData" strip>
         <el-table-column prop="name" label="名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="价格"></el-table-column>
         <el-table-column prop="content" label="详情" width="100">
@@ -23,10 +13,7 @@
         <el-table-column prop="address" label="发货地址"></el-table-column>
         <el-table-column prop="img" label="图片">
           <template v-slot="scope">
-            <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px;" v-if="scope.row.img"
-                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
-            </div>
+            <el-image v-if="scope.row.img" style="width: 50px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
           </template>
         </el-table-column>
         <el-table-column prop="date" label="上架日期"></el-table-column>
@@ -38,19 +25,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="category" label="分类"></el-table-column>
-        <el-table-column prop="userName" label="所属用户"></el-table-column>
         <el-table-column prop="saleStatus" label="上架状态"></el-table-column>
         <el-table-column prop="readCount" label="浏览量"></el-table-column>
-        <el-table-column label="操作" align="center" width="240">
+        <el-table-column label="操作" align="center" width="160">
           <template v-slot="scope">
-            <el-button size="mini" type="success" plain @click="changeStatus(scope.row, '通过')">通过</el-button>
-            <el-button size="mini" type="danger" plain @click="changeStatus(scope.row, '拒绝')">拒绝</el-button>
+            <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="pagination">
+      <div style="margin: 15px 0">
         <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -67,55 +52,11 @@
       <div v-html="content"></div>
     </el-dialog>
 
-    <el-dialog title="二手商品" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
-      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input v-model="form.price" placeholder="价格"></el-input>
-        </el-form-item>
-        <el-form-item label="详情" prop="content">
-          <el-input v-model="form.content" placeholder="详情"></el-input>
-        </el-form-item>
-        <el-form-item label="发货地址" prop="address">
-          <el-input v-model="form.address" placeholder="发货地址"></el-input>
-        </el-form-item>
-        <el-form-item label="图片" prop="img">
-          <el-input v-model="form.img" placeholder="图片">
-          </el-input>
-        </el-form-item>
-        <el-form-item label="上架日期" prop="date">
-          <el-input v-model="form.date" placeholder="上架日期"></el-input>
-        </el-form-item>
-        <el-form-item label="审核状态" prop="status">
-          <el-input v-model="form.status" placeholder="审核状态"></el-input>
-        </el-form-item>
-        <el-form-item label="分类" prop="category">
-          <el-input v-model="form.category" placeholder="分类"></el-input>
-        </el-form-item>
-        <el-form-item label="所属用户ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="所属用户ID"></el-input>
-        </el-form-item>
-        <el-form-item label="上架状态" prop="saleStatus">
-          <el-input v-model="form.saleStatus" placeholder="上架状态"></el-input>
-        </el-form-item>
-        <el-form-item label="浏览量" prop="readCount">
-          <el-input v-model="form.readCount" placeholder="浏览量"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="fromVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
-      </div>
-    </el-dialog>
-
-
   </div>
 </template>
 <script>
 export default {
-  name: "Goods",
+  name: "FrontGoods",
   data() {
     return {
       tableData: [],  // 所有的数据
@@ -141,27 +82,8 @@ export default {
       this.content = content
       this.fromVisible1 = true
     },
-    changeStatus(row, status) {
-      this.$confirm('您确定操作吗？', '确认操作', {type: "warning"}).then(response => {
-        this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-        this.form.status = status
-        this.$request.put('/goods/update', this.form).then(res => {
-          if (res.code === '200') {  // 表示成功保存
-            this.$message.success('保存成功')
-            this.load(1)
-          } else {
-            this.$message.error(res.msg)  // 弹出错误的信息
-          }
-        })
-      }).catch(err => {})
-    },
-    handleAdd() {   // 新增数据
-      this.form = {}  // 新增数据的时候清空数据
-      this.fromVisible = true   // 打开弹窗
-    },
     handleEdit(row) {   // 编辑数据
-      this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-      this.fromVisible = true   // 打开弹窗
+      this.$router.push('/front/addGoods?id=' + row.id)
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
