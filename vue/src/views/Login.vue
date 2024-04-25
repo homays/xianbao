@@ -6,7 +6,7 @@
     <div style="flex: 1; background-color: #f8f8f8">
       <div style="height: 50px; display: flex; align-items: center; background-color: white; padding-left: 20px">
         <img src="@/assets/imgs/logo1.png" alt="" style="width: 40px">
-        <span style="font-size: 24px; margin-left: 5px">二手交易网</span>
+        <span style="font-size: 24px; margin-left: 5px">闲宝</span>
       </div>
       <div style="height: calc(100vh - 50px); display: flex; align-items: center; justify-content: center">
         <div style="width: 400px; padding: 40px; background-color: white; border-radius: 5px;">
