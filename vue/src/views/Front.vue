@@ -33,6 +33,9 @@
                 <div @click="$router.push('/front/goods')">我的商品</div>
               </el-dropdown-item>
               <el-dropdown-item>
+                <div @click="$router.push('/front/address')">我的地址</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <div style="text-decoration: none" @click="$router.push('/front/collect')">我的收藏</div>
               </el-dropdown-item>
               <el-dropdown-item>
