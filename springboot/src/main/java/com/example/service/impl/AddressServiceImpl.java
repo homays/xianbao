@@ -3,6 +3,7 @@ package com.example.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.enums.RoleEnum;
@@ -52,7 +53,14 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
 
     @Override
     public List<Address> selectAll(Address address) {
-        return addressMapper.selectList(null);
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        String role = claims.get("role").toString();
+        if (RoleEnum.USER.name().equals(role)) {
+            String userId = claims.get("userId").toString();
+            address.setUserId(Integer.parseInt(userId));
+        }
+        return addressMapper.selectList(Wrappers.<Address>lambdaQuery()
+                .eq(address.getUserId() != null, Address::getUserId, address.getUserId()));
     }
 
     @Override

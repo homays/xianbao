@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.OrdersMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.entity.Orders">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="goodsName" column="goods_name" jdbcType="VARCHAR"/>
+            <result property="goodsImg" column="goods_img" jdbcType="VARCHAR"/>
+            <result property="orderNo" column="order_no" jdbcType="VARCHAR"/>
+            <result property="total" column="total" jdbcType="DECIMAL"/>
+            <result property="time" column="time" jdbcType="VARCHAR"/>
+            <result property="payNo" column="pay_no" jdbcType="VARCHAR"/>
+            <result property="payTime" column="pay_time" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="saleId" column="sale_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,goods_name,goods_img,order_no,total,time,pay_no,pay_time,user_id,address,phone,user_name,status,sale_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.Orders">
+        select
+        <include refid="Base_Column_List" />
+        from orders
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="goodsName != null"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsImg != null"> and goods_img like concat('%', #{goodsImg}, '%')</if>
+            <if test="orderNo != null"> and order_no like concat('%', #{orderNo}, '%')</if>
+            <if test="total != null"> and total = #{total}</if>
+            <if test="time != null"> and time like concat('%', #{time}, '%')</if>
+            <if test="payNo != null"> and pay_no like concat('%', #{payNo}, '%')</if>
+            <if test="payTime != null"> and pay_time like concat('%', #{payTime}, '%')</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="address != null"> and address like concat('%', #{address}, '%')</if>
+            <if test="phone != null"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="userName != null"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="status != null"> and status like concat('%', #{status}, '%')</if>
+            <if test="saleId != null"> and sale_id = #{saleId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.Orders">
+        select
+        <include refid="Base_Column_List" />
+        from orders
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from orders
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.Orders" useGeneratedKeys="true" keyProperty="id">
+        insert into orders
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="goodsName != null">goods_name,</if>
+            <if test="goodsImg != null">goods_img,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="total != null">total,</if>
+            <if test="time != null">time,</if>
+            <if test="payNo != null">pay_no,</if>
+            <if test="payTime != null">pay_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="address != null">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="status != null">status,</if>
+            <if test="saleId != null">sale_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="goodsName != null">#{goodsName},</if>
+            <if test="goodsImg != null">#{goodsImg},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="total != null">#{total},</if>
+            <if test="time != null">#{time},</if>
+            <if test="payNo != null">#{payNo},</if>
+            <if test="payTime != null">#{payTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="saleId != null">#{saleId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Orders">
+        update orders
+        <set>
+            <if test="goodsName != null">
+                goods_name = #{goodsName},
+            </if>
+            <if test="goodsImg != null">
+                goods_img = #{goodsImg},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo},
+            </if>
+            <if test="total != null">
+                total = #{total},
+            </if>
+            <if test="time != null">
+                time = #{time},
+            </if>
+            <if test="payNo != null">
+                pay_no = #{payNo},
+            </if>
+            <if test="payTime != null">
+                pay_time = #{payTime},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="saleId != null">
+                sale_id = #{saleId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

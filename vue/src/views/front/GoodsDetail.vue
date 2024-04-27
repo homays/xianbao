@@ -24,7 +24,7 @@
           </el-button>
           <el-button v-if="!goods.userCollect" size="medium" type="warning" @click="collect">收藏</el-button>
           <el-button v-if="goods.userCollect" size="medium" type="warning" @click="collect">已收藏</el-button>
-          <el-button size="medium" type="danger">立即购买</el-button>
+          <el-button size="medium" type="danger" @click="handleBuy">立即购买</el-button>
         </div>
       </div>
     </div>
@@ -47,6 +47,21 @@
         <Comment :fid="id" module="goods"/>
       </div>
 
+      <el-dialog title="选择收获地址" :visible.sync="fromVisible" width="30%" :close-on-click-modal="false" destory-on-close>
+        <div style="padding: 0 20px">
+          <el-radio-group v-model="form.addressId">
+            <el-radio v-for="item in addressList" :key="item.id" :label="item.id" style="margin-bottom: 10px">
+              {{ item.name + ' ' + item.phone + ' ' + item.address }}
+            </el-radio>
+          </el-radio-group>
+          <a v-if="addressList.length === 0" href="/front/address" target="_blank">还没有收货地址？去创建</a>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="fromVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addOrder">确 定</el-button>
+        </div>
+      </el-dialog>
+
     </div>
   </div>
 </template>
@@ -60,11 +75,15 @@ export default {
     return {
       id: this.$route.query.id,
       goods: {},
-      current: '商品详情'
+      current: '商品详情',
+      form: {},
+      fromVisible: false,
+      addressList: []
     }
   },
   created() {
     this.load()
+    this.loadAddress()
   },
   methods: {
     changeItem(current) {
@@ -93,6 +112,30 @@ export default {
           this.$message.error(res.msg)
         }
         this.load()
+      })
+    },
+    loadAddress() {
+      this.$request.get('/address/selectAll').then(res => {
+        this.addressList = res.data || []
+      })
+    },
+    handleBuy() {
+      this.form = {}
+      this.fromVisible = true
+    },
+    addOrder() {
+      if (!this.form.addressId) {
+        this.$message.warning('请选择收货地址')
+        return
+      }
+      this.form.goodsId = this.id
+      this.$request.post('/orders/add', this.form).then(res => {
+        if (res.code === '200') {
+          this.$message.success('下单成功')
+          this.$router.push('/front/orders')
+        } else {
+          this.$message.error(res.msg)
+        }
       })
     }
   }
