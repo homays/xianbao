@@ -4,17 +4,16 @@
     <div style="margin-bottom: 15px; display: flex">
       <div style="flex: 1">
         <el-radio-group v-model="role">
-          <el-radio-button label="buyer">我购买的订单</el-radio-button>
-          <el-radio-button label="sale">我出售的订单</el-radio-button>
+          <el-radio-button label="buyer" @click.native.prevent="happy('buyer')">我购买的订单</el-radio-button>
+          <el-radio-button label="seller" @click.native.prevent="happy('seller')">我出售的订单</el-radio-button>
         </el-radio-group>
-
       </div>
       <div style="flex: 1">
-        <el-input placeholder="请输入订单编号" style="width: 200px; margin-right: 5px" v-model="orderNo"
+        <el-input placeholder="请输入订单编号" style="width: 150px; margin-right: 5px" v-model="orderNo"
                   clearable></el-input>
-        <el-input placeholder="请输入商品名称" style="width: 200px; margin-right: 5px" v-model="goodsName"
+        <el-input placeholder="请输入商品名称" style="width: 150px; margin-right: 5px" v-model="goodsName"
                   clearable></el-input>
-        <el-select style="width: 200px; margin-right: 5px" clearable v-model="orderStatus">
+        <el-select style="width: 100px; margin-right: 5px" clearable v-model="orderStatus">
           <el-option value="待支付"></el-option>
           <el-option value="待发货"></el-option>
           <el-option value="待收货"></el-option>
@@ -62,10 +61,10 @@
             <el-button v-if="scope.row.status === '待支付'" size="mini" type="primary" plain
                        @click="pay(scope.row.orderNo)">支付
             </el-button>
-            <el-button v-if="scope.row.status === '待发货'" size="mini" type="primary" plain
+            <el-button v-if="scope.row.status === '待发货' && scope.row.saleId === user.id" size="mini" type="primary" plain
                        @click="changeStatus(scope.row, '待收货')">发货
             </el-button>
-            <el-button v-if="scope.row.status === '待收货'" size="mini" type="primary" plain
+            <el-button v-if="scope.row.status === '待收货' && scope.row.userId === user.id" size="mini" type="primary" plain
                        @click="changeStatus(scope.row, '已完成')">收货
             </el-button>
             <el-button v-if="scope.row.status === '待支付'" size="mini" type="danger" plain
@@ -164,6 +163,13 @@ export default {
     this.load(1)
   },
   methods: {
+    pay(orderNo) {
+      window.open('http://localhost:9090/alipay/pay?orderNo=' + orderNo)
+    },
+    happy(role) {
+      this.role = role
+      this.load(1)
+    },
     changeStatus(row, status) {
       this.$confirm('您确认操作吗？', '确认操作', {type: "warning"}).then(response => {
         this.form = JSON.parse(JSON.stringify(row))
@@ -176,7 +182,8 @@ export default {
             this.$message.error(res.msg)  // 弹出错误的信息
           }
         })
-      }).catch(e => {})
+      }).catch(e => {
+      })
     },
     handleEdit(row) {   // 编辑数据
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
@@ -241,7 +248,8 @@ export default {
         pageSize: this.pageSize,
         orderNo: this.orderNo,
         goodsName: this.goodsName,
-        orderStatus: this.orderStatus
+        orderStatus: this.orderStatus,
+        role: this.role
       }).then(res => {
         if (res.code === '200') {
           this.tableData = res.data.records

@@ -3,9 +3,11 @@ package com.example.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.common.enums.OrderStatusEnum;
+import com.example.common.enums.RoleEnum;
 import com.example.entity.Address;
 import com.example.entity.Goods;
 import com.example.entity.Orders;
@@ -28,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,8 +106,17 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         String orderNo = ordersQueryDTO.getOrderNo();
         String goodsName = ordersQueryDTO.getGoodsName();
         String orderStatus = ordersQueryDTO.getOrderStatus();
+        String role = ordersQueryDTO.getRole();
+        Map<String, Object> claims = ThreadLocalUtil.get();
         Page<Orders> page = new Page<>(ordersQueryDTO.getPageNum(), ordersQueryDTO.getPageSize());
         LambdaQueryWrapper<Orders> wrapper = new LambdaQueryWrapper<>();
+        if (RoleEnum.USER.name().equals(claims.get("role"))) {
+            if (role.equals("buyer")) {
+                wrapper.eq(Orders::getUserId, claims.get("userId"));
+            } else if (role.equals("seller")) {
+                wrapper.eq(Orders::getSaleId, claims.get("userId"));
+            }
+        }
         wrapper.eq(StrUtil.isNotBlank(orderNo), Orders::getOrderNo, orderNo);
         wrapper.like(StrUtil.isNotBlank(goodsName), Orders::getGoodsName, goodsName);
         wrapper.eq(StrUtil.isNotBlank(orderStatus), Orders::getStatus, orderStatus);
@@ -116,6 +128,12 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         }).collect(Collectors.toList());
         ordersPage.setRecords(collect);
         return ordersPage;
+    }
+
+    @Override
+    public Orders selectByOrderNo(String orderNo) {
+        return ordersMapper.selectOne(Wrappers.<Orders>lambdaQuery()
+                .eq(Orders::getOrderNo, orderNo));
     }
 }
 

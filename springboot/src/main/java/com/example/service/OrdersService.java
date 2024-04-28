@@ -23,4 +23,6 @@ public interface OrdersService extends IService<Orders> {
 
 
     Page<Orders> selectPage(Orders orders, OrdersQueryDTO ordersQueryDTO);
+
+    Orders selectByOrderNo(String orderNo);
 }

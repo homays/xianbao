@@ -12,4 +12,9 @@ public class OrdersQueryDTO {
     private String orderNo;
     private String goodsName;
     private String orderStatus;
+    /**
+     * 买家：buyer
+     * 卖家：seller
+     */
+    private String role;
 }
