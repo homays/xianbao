@@ -24,7 +24,7 @@
           </el-button>
           <el-button v-if="!goods.userCollect" size="medium" type="warning" @click="collect">收藏</el-button>
           <el-button v-if="goods.userCollect" size="medium" type="warning" @click="collect">已收藏</el-button>
-          <el-button size="medium" type="danger" @click="handleBuy">立即购买</el-button>
+          <el-button v-if="goods.userId !== user.id" size="medium" type="danger" @click="handleBuy">立即购买</el-button>
         </div>
       </div>
     </div>
@@ -78,7 +78,8 @@ export default {
       current: '商品详情',
       form: {},
       fromVisible: false,
-      addressList: []
+      addressList: [],
+      user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
     }
   },
   created() {
