@@ -12,24 +12,28 @@
 
     <div class="table">
       <el-table :data="tableData" strip @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
+        <el-table-column prop="img" label="图片">
+          <template v-slot="scope">
+            <el-image v-if="scope.row.img" style="width: 50px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="price" label="价格"></el-table-column>
+        <el-table-column prop="price" label="价格">
+          <template v-slot="scope">
+            <span style="color: red">￥{{ scope.row.price }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="content" label="详情" width="100">
           <template v-slot="scope">
             <el-button @click="preview(scope.row.content)">显示详情</el-button>
           </template>
         </el-table-column>
+        <el-table-column prop="category" label="分类"></el-table-column>
         <el-table-column prop="address" label="发货地址"></el-table-column>
-        <el-table-column prop="img" label="图片">
-          <template v-slot="scope">
-            <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px;" v-if="scope.row.img"
-                        :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
-            </div>
-          </template>
-        </el-table-column>
+        <el-table-column prop="userName" label="所属用户"></el-table-column>
         <el-table-column prop="date" label="上架日期"></el-table-column>
+        <el-table-column prop="saleStatus" label="上架状态"></el-table-column>
+        <el-table-column prop="readCount" label="浏览量"></el-table-column>
         <el-table-column prop="status" label="审核状态">
           <template v-slot="scope">
             <el-tag type="info" v-if="scope.row.status === '待审核'">待审核</el-tag>
@@ -37,10 +41,6 @@
             <el-tag type="danger" v-if="scope.row.status === '拒绝'">拒绝</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="分类"></el-table-column>
-        <el-table-column prop="userName" label="所属用户"></el-table-column>
-        <el-table-column prop="saleStatus" label="上架状态"></el-table-column>
-        <el-table-column prop="readCount" label="浏览量"></el-table-column>
         <el-table-column label="操作" align="center" width="240">
           <template v-slot="scope">
             <el-button size="mini" type="success" plain @click="changeStatus(scope.row, '通过')">通过</el-button>

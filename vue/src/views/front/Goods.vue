@@ -3,20 +3,27 @@
 
     <div>
       <el-table :data="tableData" strip>
-        <el-table-column prop="name" label="名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="price" label="价格"></el-table-column>
-        <el-table-column prop="content" label="详情" width="100">
-          <template v-slot="scope">
-            <el-button @click="preview(scope.row.content)">显示详情</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column prop="address" label="发货地址"></el-table-column>
         <el-table-column prop="img" label="图片">
           <template v-slot="scope">
             <el-image v-if="scope.row.img" style="width: 50px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
           </template>
         </el-table-column>
+        <el-table-column prop="name" label="名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="price" label="价格">
+          <template v-slot="scope">
+            <span style="color: red">￥{{ scope.row.price }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="content" label="详情" width="100">
+          <template v-slot="scope">
+            <el-button @click="preview(scope.row.content)">显示详情</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="category" label="分类"></el-table-column>
+        <el-table-column prop="address" label="发货地址"></el-table-column>
         <el-table-column prop="date" label="上架日期"></el-table-column>
+        <el-table-column prop="saleStatus" label="上架状态"></el-table-column>
+        <el-table-column prop="readCount" label="浏览量"></el-table-column>
         <el-table-column prop="status" label="审核状态">
           <template v-slot="scope">
             <el-tag type="info" v-if="scope.row.status === '待审核'">待审核</el-tag>
@@ -24,9 +31,6 @@
             <el-tag type="danger" v-if="scope.row.status === '拒绝'">拒绝</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="category" label="分类"></el-table-column>
-        <el-table-column prop="saleStatus" label="上架状态"></el-table-column>
-        <el-table-column prop="readCount" label="浏览量"></el-table-column>
         <el-table-column label="操作" align="center" width="160">
           <template v-slot="scope">
             <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">编辑</el-button>
