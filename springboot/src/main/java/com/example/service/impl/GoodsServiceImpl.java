@@ -39,6 +39,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public void add(Goods goods) {
         String userId = ThreadLocalUtil.getUserId();
         User user = userMapper.selectById(userId);
+        goods.setUserId(Integer.parseInt(userId));
         goods.setUserName(user.getUsername());
         goods.setDate(DateUtil.now());
         goods.setStatus(StatusEnum.TO_BE_REVIEWED.value);
