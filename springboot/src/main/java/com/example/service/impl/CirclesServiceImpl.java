@@ -69,7 +69,7 @@ public class CirclesServiceImpl extends ServiceImpl<CirclesMapper, Circles> impl
 
     @Override
     public List<Circles> selectAll(Circles circles) {
-        return circlesMapper.selectAll(circles);
+        return circlesMapper.selectList(null);
     }
 
     @Override

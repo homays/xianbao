@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
 import com.example.entity.Posts;
 import com.example.service.PostsService;
+import com.example.vo.req.PostsQueryDTO;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -80,6 +81,15 @@ public class PostsController {
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<Posts> page = postsService.selectPage(posts, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    /**
+     * 前端分页查询
+     */
+    @PostMapping("/selectFrontPage")
+    public Result selectFrontPage(Posts posts, @RequestBody PostsQueryDTO postsQueryDTO) {
+        Page<Posts> page = postsService.selectFrontPage(posts, postsQueryDTO);
         return Result.success(page);
     }
 

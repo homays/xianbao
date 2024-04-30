@@ -47,6 +47,9 @@ const routes = [
       { path: 'goods', name: 'Goods', component: () => import('../views/front/Goods') },
       { path: 'address', name: 'Address', component: () => import('../views/front/Address') },
       { path: 'orders', name: 'Orders', component: () => import('../views/front/Orders') },
+      { path: 'posts', name: 'Posts', component: () => import('../views/front/Posts') },
+      { path: 'userPosts', name: 'UserPosts', component: () => import('../views/front/UserPosts') },
+      { path: 'postsDetail', name: 'PostsDetail', component: () => import('../views/front/PostsDetail') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

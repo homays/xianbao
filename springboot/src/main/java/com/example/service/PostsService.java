@@ -3,6 +3,7 @@ package com.example.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.entity.Posts;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.vo.req.PostsQueryDTO;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface PostsService extends IService<Posts> {
 
     Page<Posts> selectPage(Posts posts, Integer page, Integer size);
 
+    Page<Posts> selectFrontPage(Posts posts, PostsQueryDTO postsQueryDTO);
 }
