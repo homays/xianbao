@@ -93,9 +93,11 @@ public class CommentController {
      * 获取评论
      */
     @GetMapping("/selectTree/{fid}/{module}")
-    public Result selectTree(@PathVariable Integer fid, @PathVariable String module) {
-        List<CommentVO> list = commentService.selectTree(fid, module);
-        return Result.success(list);
+    public Result selectTree(@PathVariable Integer fid, @PathVariable String module,
+                             @RequestParam(defaultValue = "1") Integer pageNum,
+                             @RequestParam(defaultValue = "5") Integer pageSize) {
+        Page<CommentVO> page = commentService.selectTree(fid, module, pageNum, pageSize);
+        return Result.success(page);
     }
 
     /**

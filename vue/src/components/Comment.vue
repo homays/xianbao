@@ -47,6 +47,19 @@
           </div>
         </div>
       </div>
+
+      <div style="margin-top: 10px" v-if="total > 0">
+        <el-pagination
+            small
+            background
+            @current-change="handleCurrentChange"
+            :current-page="pageNum"
+            :page-sizes="[5, 10, 20]"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -63,7 +76,10 @@ export default {
       user: JSON.parse(localStorage.getItem('xm-user') || '{}'),
       commentCount: 0,
       content: '',
-      commentList: []
+      commentList: [],
+      pageNum: 1,
+      pageSize: 8,
+      total: 0
     }
   },
   created() {
@@ -87,8 +103,14 @@ export default {
       })
     },
     loadComment() {
-      this.$request.get('/comment/selectTree/' + this.fid + '/' + this.module).then(res => {
-        this.commentList = res.data || []
+      this.$request.get('/comment/selectTree/' + this.fid + '/' + this.module, {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+        }
+      }).then(res => {
+        this.commentList = res.data.records || []
+        this.total = res.data.total || 0
       })
 
       this.$request.get('/comment/selectCount/' + this.fid + '/' + this.module).then(res => {
@@ -101,6 +123,10 @@ export default {
         data.content = comment.replyContent
         data.pid = comment.id
       }
+      if (!data.content) {
+        this.$message.warning('评论内容不能为空')
+        return;
+      }
       this.$request.post('/comment/add', data).then(res => {
         if (res.code === '200') {
           this.$message.success('操作成功')
@@ -111,6 +137,10 @@ export default {
         }
       })
     },
+    handleCurrentChange(pageNum) {
+      this.pageNum = pageNum
+      this.loadComment()
+    }
   }
 }
 </script>

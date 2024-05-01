@@ -21,7 +21,7 @@ public interface CommentService extends IService<Comment> {
 
     Page<Comment> selectPage(Comment comment, Integer pageNum, Integer pageSize);
 
-    List<CommentVO> selectTree(Integer fid, String module);
+    Page<CommentVO> selectTree(Integer fid, String module, Integer pageNum, Integer pageSize);
 
     Integer selectCount(Integer fid, String module);
 

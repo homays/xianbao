@@ -58,13 +58,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public void deleteDeep(Integer id) {
-        Comment comment = commentMapper.selectOne(Wrappers.<Comment>lambdaQuery()
+        List<Comment> comment = commentMapper.selectList(Wrappers.<Comment>lambdaQuery()
                 .eq(Comment::getPid, id));
         if (ObjectUtil.isNull(comment)) {
             return;
         }
-        commentMapper.deleteById(id);
-        this.deleteDeep(comment.getId());
+        comment.forEach(item -> {
+            this.deleteDeep(item.getId());
+            commentMapper.deleteById(id);
+            this.deleteDeep(item.getId());
+        });
     }
 
     @Override
@@ -98,14 +101,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public List<CommentVO> selectTree(Integer fid, String module) {
+    public Page<CommentVO> selectTree(Integer fid, String module, Integer pageNum, Integer pageSize) {
+        Page<Comment> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getFid, fid).eq(Comment::getModule, module);
+        Page<Comment> commentPage = commentMapper.selectPage(page, wrapper);
         // 1、查询所有评论
-        List<Comment> commentsList = commentMapper.selectList(Wrappers.<Comment>lambdaQuery()
-                .eq(Comment::getFid, fid)
-                .eq(Comment::getModule, module));
+        List<Comment> commentsList = commentPage.getRecords();
         // 2、获取所有一级节点评论 (pid == null)
         List<Comment> rootList = commentsList.stream().filter(item -> item.getPid() == null).collect(Collectors.toList());
-        return rootList.stream().map(item -> {
+        List<CommentVO> commentVOList = rootList.stream().map(item -> {
             User user = userMapper.selectById(item.getUserId());
             CommentVO commentVO = new CommentVO();
             BeanUtil.copyProperties(item, commentVO);
@@ -133,6 +138,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             commentVO.setChrildrenList(collect);
             return commentVO;
         }).collect(Collectors.toList());
+        Page<CommentVO> commentVOPage = new Page<>(pageNum, pageSize);
+        commentVOPage.setRecords(commentVOList);
+        commentVOPage.setTotal(page.getTotal());
+        return commentVOPage;
     }
 
     @Override
