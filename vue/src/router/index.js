@@ -50,6 +50,8 @@ const routes = [
       { path: 'posts', name: 'Posts', component: () => import('../views/front/Posts') },
       { path: 'userPosts', name: 'UserPosts', component: () => import('../views/front/UserPosts') },
       { path: 'postsDetail', name: 'PostsDetail', component: () => import('../views/front/PostsDetail') },
+      { path: 'help', name: 'Help', component: () => import('../views/front/Help') },
+      { path: 'userHelp', name: 'UserHelp', component: () => import('../views/front/UserHelp') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

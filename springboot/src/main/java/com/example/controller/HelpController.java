@@ -5,6 +5,7 @@ import com.example.common.Result;
 import com.example.entity.Help;
 import com.example.service.HelpService;
 import com.example.vo.req.HelpDTO;
+import com.example.vo.req.HelpQueryDTO;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,7 +52,7 @@ public class HelpController {
      */
     @PutMapping("/update")
     public Result updateById(@RequestBody Help help) {
-        helpService.updateById(help);
+        helpService.updateHelp(help);
         return Result.success();
     }
 
@@ -81,6 +82,15 @@ public class HelpController {
                              @RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         Page<Help> page = helpService.selectPage(help, pageNum, pageSize);
+        return Result.success(page);
+    }
+
+    /**
+     * 分页查询
+     */
+    @PostMapping("/selectFrontPage")
+    public Result selectFrontPage(Help help, @RequestBody HelpQueryDTO helpQueryDTO) {
+        Page<Help> page = helpService.selectFrontPage(help, helpQueryDTO);
         return Result.success(page);
     }
 

@@ -59,5 +59,8 @@ public class Help implements Serializable {
     private String userName;
 
     @TableField(exist = false)
+    private String avatar;
+
+    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

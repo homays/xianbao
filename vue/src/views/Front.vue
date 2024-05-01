@@ -36,6 +36,9 @@
                 <div @click="$router.push('/front/userPosts')">我的动态</div>
               </el-dropdown-item>
               <el-dropdown-item>
+                <div @click="$router.push('/front/userHelp')">我的求购</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
                 <div @click="$router.push('/front/orders')">我的订单</div>
               </el-dropdown-item>
               <el-dropdown-item>

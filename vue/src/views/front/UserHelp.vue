@@ -1,23 +1,18 @@
 <template>
-  <div>
-    <div class="search">
-      <el-input placeholder="请输入标题关键字查询" style="width: 200px" v-model="title"></el-input>
-      <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
-      <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
+  <div style="width: 80%; margin: 10px auto">
+    <div style="margin-bottom: 10px">
+      <el-button type="primary" plain @click="handleAdd">发布求购</el-button>
     </div>
 
-    <div class="table">
-      <el-table :data="tableData" strip @selection-change="handleSelectionChange">
+    <div style="margin: 10px auto" class="card">
+      <el-table :data="tableData" strip>
         <el-table-column prop="img" label="图片">
           <template v-slot="scope">
-            <div style="display: flex; align-items: center">
-              <el-image style="width: 40px; height: 40px;" v-if="scope.row.img" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
-            </div>
+            <el-image v-if="scope.row.img" style="width: 50px" :src="scope.row.img" :preview-src-list="[scope.row.img]"></el-image>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="content" label="内容"></el-table-column>
-        <el-table-column prop="userName" label="用户"></el-table-column>
         <el-table-column prop="time" label="发布时间" sortable></el-table-column>
         <el-table-column prop="solved" label="是否解决"></el-table-column>
         <el-table-column prop="status" label="审核状态">
@@ -29,14 +24,15 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="250">
           <template v-slot="scope">
-            <el-button size="mini" type="success" plain @click="changeStatus(scope.row, '通过')">通过</el-button>
-            <el-button size="mini" type="danger" plain @click="changeStatus(scope.row, '拒绝')">拒绝</el-button>
+            <el-button v-if="scope.row.style !== '通过'" size="mini" type="primary" plain
+                       @click="handleEdit(scope.row)">编辑
+            </el-button>
             <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="pagination">
+      <div style="margin: 15px auto">
         <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -55,22 +51,23 @@
           <el-input v-model="form.title" placeholder="标题"></el-input>
         </el-form-item>
         <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="内容"></el-input>
+          <el-input type="textarea" v-model="form.content" placeholder="内容"></el-input>
         </el-form-item>
         <el-form-item label="图片" prop="img">
-          <el-input v-model="form.img" placeholder="图片"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-input v-model="form.status" placeholder="状态"></el-input>
-        </el-form-item>
-        <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="用户ID"></el-input>
-        </el-form-item>
-        <el-form-item label="发布时间" prop="time">
-          <el-input v-model="form.time" placeholder="发布时间"></el-input>
+          <el-upload
+              :action="$baseUrl + '/files/upload'"
+              :headers="{ token: user.token }"
+              list-type="picture"
+              :on-success="handleImgSuccess"
+          >
+            <el-button type="primary">上传图片</el-button>
+          </el-upload>
         </el-form-item>
         <el-form-item label="是否解决" prop="solved">
-          <el-input v-model="form.solved" placeholder="是否解决"></el-input>
+          <el-select style="width: 100%" v-model="form.solved">
+            <el-option value="未解决"></el-option>
+            <el-option value="已解决"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -83,8 +80,10 @@
   </div>
 </template>
 <script>
+import E from "wangeditor";
+
 export default {
-  name: "Help",
+  name: "UserHelp",
   data() {
     return {
       tableData: [],  // 所有的数据
@@ -103,20 +102,18 @@ export default {
     this.load(1)
   },
   methods: {
-    changeStatus(row, status) {
-      this.$confirm('您确定' + status + '吗？', '确认操作', {type: "warning"}).then(response => {
-        this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
-        this.form.status = status
-        this.$request.put('/help/update', this.form).then(res => {
-          if (res.code === '200') {  // 表示成功保存
-            this.$message.success('操作成功')
-            this.load(1)
-          } else {
-            this.$message.error(res.msg)  // 弹出错误的信息
-          }
-        })
-      }).catch(err => {
-      })
+    handleAdd() {   // 新增数据
+      this.form = {}  // 新增数据的时候清空数据
+      this.fromVisible = true   // 打开弹窗
+      this.setRichText('')
+    },
+    handleImgSuccess(response, file, fileList) {
+      this.form.img = response.data
+    },
+    handleEdit(row) {   // 编辑数据
+      this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
+      this.fromVisible = true   // 打开弹窗
+      this.setRichText(this.form.content)
     },
     save() {   // 保存按钮触发的逻辑  它会触发新增或者更新
       this.$refs.formRef.validate((valid) => {
@@ -194,6 +191,22 @@ export default {
     handleCurrentChange(pageNum) {
       this.load(pageNum)
     },
+    setRichText(html) {
+      this.$nextTick(() => {
+        this.editor = new E(`#editor`)
+        this.editor.config.uploadImgServer = this.$baseUrl + '/files/editor/upload'
+        this.editor.config.uploadFileName = 'file'
+        this.editor.config.uploadImgHeaders = {
+          token: this.user.token
+        }
+        this.editor.config.uploadImgParams = {
+          type: 'img',
+        }
+        this.editor.config.zIndex = 0
+        this.editor.create()  // 创建
+        this.editor.txt.html(html)
+      })
+    }
   }
 }
 </script>
