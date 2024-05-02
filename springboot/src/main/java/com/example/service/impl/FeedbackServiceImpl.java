@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.common.enums.RoleEnum;
 import com.example.entity.Feedback;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
@@ -57,9 +58,17 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
 
     @Override
     public Page<Feedback> selectPage(Feedback feedback, Integer pageNum, Integer pageSize) {
+        Map<String, Object> claims = ThreadLocalUtil.get();
+        String role = claims.get("role").toString();
+        if (RoleEnum.USER.name().equals(role)) {
+            String userId = claims.get("userId").toString();
+            feedback.setUserId(Integer.parseInt(userId));
+        }
         Page<Feedback> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<Feedback> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(feedback.getUserId() != null, Feedback::getUserId, feedback.getUserId());
         wrapper.like(StrUtil.isNotBlank(feedback.getTitle()), Feedback::getTitle, feedback.getTitle());
+        wrapper.orderByDesc(Feedback::getCreatetime);
         Page<Feedback> feedbackPage = feedbackMapper.selectPage(page, wrapper);
         List<Feedback> records = feedbackPage.getRecords();
         List<Feedback> collect = records.stream().peek(item -> {

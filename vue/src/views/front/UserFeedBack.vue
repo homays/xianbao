@@ -1,34 +1,27 @@
 <template>
-  <div>
-    <div class="search">
+  <div style="width: 80%; margin: 10px auto" class="card">
+    <div style="margin-bottom: 10px">
       <el-input placeholder="请输入关键字查询" style="width: 200px" v-model="title"></el-input>
       <el-button type="info" plain style="margin-left: 10px" @click="load(1)">查询</el-button>
       <el-button type="warning" plain style="margin-left: 10px" @click="reset">重置</el-button>
     </div>
 
-    <div class="operation">
-      <el-button type="danger" plain @click="delBatch">批量删除</el-button>
-    </div>
-
     <div class="table">
-      <el-table :data="tableData" strip @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table :data="tableData" strip>
         <el-table-column prop="title" label="主题"></el-table-column>
         <el-table-column prop="content" label="内容"></el-table-column>
         <el-table-column prop="phone" label="联系方式"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column prop="reply" label="回复"></el-table-column>
-        <el-table-column prop="createtime" label="创建时间" sortable></el-table-column>
-        <el-table-column prop="userName" label="提交人姓名"></el-table-column>
-        <el-table-column label="操作" align="center" width="180">
+        <el-table-column prop="reply" label="客服回复"></el-table-column>
+        <el-table-column prop="createtime" label="创建时间"></el-table-column>
+        <el-table-column label="操作" align="center" width="100">
           <template v-slot="scope">
-            <el-button size="mini" type="primary" plain @click="handleEdit(scope.row)">回复</el-button>
             <el-button size="mini" type="danger" plain @click="del(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="pagination">
+      <div style="margin: 15px 0">
         <el-pagination
             background
             @current-change="handleCurrentChange"
@@ -41,30 +34,12 @@
       </div>
     </div>
 
-    <el-dialog title="反馈信息" :visible.sync="fromVisible" width="40%" :close-on-click-modal="false" destroy-on-close>
-      <el-form :model="form" label-width="100px" style="padding-right: 50px" :rules="rules" ref="formRef">
-        <el-form-item label="主题" prop="title">
-          <el-input v-model="form.title" placeholder="主题" disabled=""></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <el-input v-model="form.content" placeholder="内容" disabled=""></el-input>
-        </el-form-item>
-        <el-form-item label="回复" prop="reply">
-          <el-input type="textarea" v-model="form.reply" placeholder="回复"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="fromVisible = false">取 消</el-button>
-        <el-button type="primary" @click="save">确 定</el-button>
-      </div>
-    </el-dialog>
-
 
   </div>
 </template>
 <script>
 export default {
-  name: "Feedback",
+  title: "FrontFeedback",
   data() {
     return {
       tableData: [],  // 所有的数据
@@ -84,6 +59,10 @@ export default {
     this.load(1)
   },
   methods: {
+    handleAdd() {   // 新增数据
+      this.form = {}  // 新增数据的时候清空数据
+      this.fromVisible = true   // 打开弹窗
+    },
     handleEdit(row) {   // 编辑数据
       this.form = JSON.parse(JSON.stringify(row))  // 给form对象赋值  注意要深拷贝数据
       this.fromVisible = true   // 打开弹窗
