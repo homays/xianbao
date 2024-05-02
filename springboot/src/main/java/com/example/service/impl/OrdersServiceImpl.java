@@ -1,6 +1,9 @@
 package com.example.service.impl;
 
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -26,11 +29,10 @@ import com.example.vo.req.OrdersQueryDTO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,6 +136,46 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     public Orders selectByOrderNo(String orderNo) {
         return ordersMapper.selectOne(Wrappers.<Orders>lambdaQuery()
                 .eq(Orders::getOrderNo, orderNo));
+    }
+
+    @Override
+    public List<Dict> selectLine() {
+        List<Dict> dictList = new ArrayList<>();
+        // 所有已完成的订单
+        List<Orders> ordersList = ordersMapper.selectAll(null).stream().filter(orders ->
+                OrderStatusEnum.FINISH.value.equals(orders.getStatus())).collect(Collectors.toList());
+        Date date = new Date();
+        DateTime start = DateUtil.offsetDay(date, -8);
+        DateTime end = DateUtil.offsetDay(date, -1);
+        List<DateTime> dateTimes = DateUtil.rangeToList(start, end, DateField.DAY_OF_YEAR);
+        List<String> dateList = dateTimes.stream().map(DateUtil::formatDate).sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+        for (String day : dateList) {
+            BigDecimal total = ordersList.stream().filter(orders -> orders.getTime().contains(day)).map(Orders::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+            Dict dict = Dict.create().set("name", day).set("value", total);
+            dictList.add(dict);
+        }
+        return dictList;
+    }
+
+    @Override
+    public List<Dict> selectBar() {
+        List<Dict> dictList = new ArrayList<>();
+        // 所有已完成的订单
+        List<Orders> ordersList = ordersMapper.selectList(null).stream().filter(orders ->
+                OrderStatusEnum.FINISH.value.equals(orders.getStatus())).collect(Collectors.toList());
+        Set<String> saleList = ordersList.stream().map(item -> {
+            User sale = userMapper.selectById(item.getSaleId());
+            return sale.getName();
+        }).collect(Collectors.toSet());
+        for (String sale : saleList) {
+            BigDecimal total = ordersList.stream().filter(orders -> {
+                User saleUser = userMapper.selectById(orders.getSaleId());
+                return saleUser.getName().equals(sale);
+            }).map(Orders::getTotal).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+            Dict dict = Dict.create().set("name", sale).set("value", total);
+            dictList.add(dict);
+        }
+        return dictList;
     }
 }
 

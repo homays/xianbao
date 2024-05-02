@@ -90,7 +90,7 @@ public class Orders implements Serializable {
      * 卖家名称
      */
     @TableField(exist = false)
-    private String saleName;;
+    private String saleName;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import cn.hutool.core.lang.Dict;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.Result;
 import com.example.entity.Orders;
@@ -82,6 +83,24 @@ public class OrdersController {
                              @RequestBody OrdersQueryDTO ordersQueryDTO) {
         Page<Orders> page = ordersService.selectPage(orders, ordersQueryDTO);
         return Result.success(page);
+    }
+
+    /**
+     * 查询折线图数据
+     */
+    @GetMapping("/selectLine")
+    public Result selectLine() {
+        List<Dict> dictList = ordersService.selectLine();
+        return Result.success(dictList);
+    }
+
+    /**
+     * 查询柱状图数据
+     */
+    @GetMapping("/selectBar")
+    public Result selectBar() {
+        List<Dict> dictList = ordersService.selectBar();
+        return Result.success(dictList);
     }
 
 }
