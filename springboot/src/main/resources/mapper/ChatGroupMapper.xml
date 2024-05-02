@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ChatGroupMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.entity.ChatGroup">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="chatUserId" column="chat_user_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,chat_user_id,user_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.ChatGroup">
+        select
+        <include refid="Base_Column_List" />
+        from chat_group
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="chatUserId != null"> and chat_user_id = #{chatUserId}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.ChatGroup">
+        select
+        <include refid="Base_Column_List" />
+        from chat_group
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from chat_group
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.ChatGroup" useGeneratedKeys="true" keyProperty="id">
+        insert into chat_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="chatUserId != null">chat_user_id,</if>
+            <if test="userId != null">user_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="chatUserId != null">#{chatUserId},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.ChatGroup">
+        update chat_group
+        <set>
+            <if test="chatUserId != null">
+                chat_user_id = #{chatUserId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

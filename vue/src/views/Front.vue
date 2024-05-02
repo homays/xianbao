@@ -12,11 +12,15 @@
              :class="{'menu-active' : item.path === $route.path }">{{ item.text }}
         </div>
       </div>
+      <div>
+        <span @click="$router.push('/front/chat')" style="font-size: 16px; color: white; cursor: pointer"><i class="el-icon-chat-dot-round"></i> 聊天消息</span>
+      </div>
       <div class="front-header-right">
         <div v-if="!user.username">
           <el-button @click="$router.push('/login')">登录</el-button>
           <el-button @click="$router.push('/register')">注册</el-button>
         </div>
+
         <div v-else>
           <el-dropdown>
             <div class="front-header-dropdown">

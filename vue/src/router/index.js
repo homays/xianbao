@@ -54,6 +54,7 @@ const routes = [
       { path: 'userHelp', name: 'UserHelp', component: () => import('../views/front/UserHelp') },
       { path: 'feedBack', name: 'FeedBack', component: () => import('../views/front/FeedBack') },
       { path: 'userFeedBack', name: 'UserFeedBack', component: () => import('../views/front/UserFeedBack') },
+      { path: 'chat', name: 'Chat', component: () => import('../views/front/Chat') },
     ]
   },
   { path: '/login', name: 'Login', meta: { name: '登录' }, component: () => import('../views/Login.vue') },

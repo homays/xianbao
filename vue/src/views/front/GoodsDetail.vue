@@ -13,7 +13,12 @@
         </div>
         <div style="color: red; font-size: 24px; margin: 40px 0">￥{{ goods.price }}</div>
         <div style="margin-bottom: 20px"><span style="color: #666">发货地：</span> {{ goods.address }}</div>
-        <div style="margin-bottom: 20px"><span style="color: #666">卖家：</span> {{ goods.userName }}</div>
+        <div style="margin-bottom: 20px"><span style="color: #666">
+          卖家：</span> {{ goods.userName }}
+          <el-tooltip effect="light" content="聊天" placement="right" :hide-after="2000">
+            <i @click="chat(goods.userId)" class="el-icon-chat-dot-round" style="font-size: 18px; margin-left: 3px; cursor: pointer"></i>
+          </el-tooltip>
+        </div>
         <div style="margin-bottom: 40px"><span style="color: #666">发布日期：</span> {{ goods.date }}</div>
         <div>
           <el-button v-if="!goods.userLike" size="medium"
@@ -87,6 +92,11 @@ export default {
     this.loadAddress()
   },
   methods: {
+    chat(userId) {
+      this.$request.post('/chatGroup/add', { chatUserId: userId, userId: this.user.id }).then(res => {
+        this.$router.push('/front/chat')
+      })
+    },
     changeItem(current) {
       this.current = current
     },
