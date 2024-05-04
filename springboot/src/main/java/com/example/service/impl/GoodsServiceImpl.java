@@ -128,6 +128,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         LambdaQueryWrapper<Goods> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Goods::getStatus, StatusEnum.APPROVE.value);
         wrapper.like(StrUtil.isNotBlank(goodsQueryDTO.getCategory()), Goods::getCategory, goodsQueryDTO.getCategory());
+        wrapper.like(StrUtil.isNotBlank(goodsQueryDTO.getName()), Goods::getName, goodsQueryDTO.getName());
         if (StrUtil.isNotBlank(sort) && sort.equals("最新")) {
             wrapper.orderByDesc(Goods::getId);
         }
