@@ -31,6 +31,7 @@ const routes = [
       { path: 'address', name: 'Address', meta: { name: '地址信息' }, component: () => import('../views/manager/Address') },
       { path: 'feedBack', name: 'FeedBack', meta: { name: '反馈信息' }, component: () => import('../views/manager/FeedBack') },
       { path: 'comment', name: 'Comment', meta: { name: '评论信息' }, component: () => import('../views/manager/Comment') },
+      { path: 'orders', name: 'Orders', meta: { name: '订单信息' }, component: () => import('../views/manager/Orders') },
     ]
   },
   {
