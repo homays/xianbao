@@ -11,5 +11,5 @@
 ```
 cd vue
 npm install
-num run serve
+npm run serve
 ```
