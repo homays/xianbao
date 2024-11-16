@@ -16,7 +16,7 @@
         <div style="margin-bottom: 20px"><span style="color: #666">
           卖家：</span> {{ goods.userName }}
           <el-tooltip effect="light" content="聊天" placement="right" :hide-after="2000">
-            <i @click="chat(goods.userId)" class="el-icon-chat-dot-round" style="font-size: 18px; margin-left: 3px; cursor: pointer"></i>
+            <i v-if="goods.userId !== user.id" @click="chat(goods.userId)" class="el-icon-chat-dot-round" style="font-size: 18px; margin-left: 3px; cursor: pointer"/>
           </el-tooltip>
         </div>
         <div style="margin-bottom: 40px"><span style="color: #666">发布日期：</span> {{ goods.date }}</div>
