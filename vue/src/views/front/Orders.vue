@@ -58,7 +58,7 @@
         <el-table-column prop="saleName" label="卖家名称"></el-table-column>
         <el-table-column label="操作" align="center" width="180">
           <template v-slot="scope">
-            <el-button v-if="scope.row.status === '待支付'" size="mini" type="primary" plain
+            <el-button v-if="scope.row.status === '待支付' && scope.row.userId === user.id" size="mini" type="primary" plain
                        @click="pay(scope.row.orderNo)">支付
             </el-button>
             <el-button v-if="scope.row.status === '待发货' && scope.row.saleId === user.id" size="mini" type="primary" plain
