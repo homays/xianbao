@@ -85,6 +85,7 @@ public class HelpServiceImpl extends ServiceImpl<HelpMapper, Help> implements He
         LambdaQueryWrapper<Help> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(help.getUserId() != null, Help::getUserId, help.getUserId());
         wrapper.like(StrUtil.isNotBlank(help.getTitle()), Help::getTitle, help.getTitle());
+        wrapper.orderByDesc(Help::getTime);
         Page<Help> result = helpMapper.selectPage(page, wrapper);
         List<Help> records = result.getRecords();
         List<Help> collect = records.stream().peek(item -> {
