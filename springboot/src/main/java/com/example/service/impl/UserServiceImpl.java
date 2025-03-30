@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,14 +9,12 @@ import com.example.common.Result;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
-import com.example.entity.Admin;
 import com.example.entity.User;
 import com.example.exception.CustomException;
 import com.example.mapper.UserMapper;
 import com.example.service.UserService;
 import com.example.utils.JwtUtil;
 import com.example.vo.req.RegisterDTO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -121,8 +120,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void register(RegisterDTO registerDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(registerDTO, user);
+        User user = userMapper.selectByUsername(registerDTO.getUsername());
+        if (ObjectUtil.isNotNull(user)) {
+            throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+        }
+        user = BeanUtil.copyProperties(registerDTO, User.class);
         add(user);
     }
 

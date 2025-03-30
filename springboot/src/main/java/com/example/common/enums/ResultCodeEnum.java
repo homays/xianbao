@@ -9,7 +9,7 @@ public enum ResultCodeEnum {
     PARAM_LOST_ERROR("4001", "参数缺失"),
 
     SYSTEM_ERROR("500", "系统异常"),
-    USER_EXIST_ERROR("5001", "用户名已存在"),
+    USER_EXIST_ERROR("5001", "用户已存在"),
     USER_NOT_LOGIN("5002", "用户未登录"),
     USER_ACCOUNT_ERROR("5003", "账号或密码错误"),
     USER_NOT_EXIST_ERROR("5004", "用户不存在"),
